@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="r2Jj6Z" name="tutorial1" projectType="audioplug" jucerVersion="5.4.3"
+<JUCERPROJECT id="r2Jj6Z" name="tutorial1" projectType="audioplug" jucerVersion="5.4.4"
               pluginFormats="buildVST3" companyName="JudZ">
   <MAINGROUP id="JqTWZn" name="tutorial1">
     <GROUP id="{883A46D0-ECEF-4F8C-F05E-9466C1DE0AD2}" name="Source">

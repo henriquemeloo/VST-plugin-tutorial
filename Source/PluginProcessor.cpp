@@ -24,7 +24,7 @@ Tutorial1AudioProcessor::Tutorial1AudioProcessor()
                        )
 #endif
 {
-	addParameter(gain = new AudioParameterFloat("gain", "Gain", 0.0f, 1.0f, 0.0f));
+	addParameter(gain = new AudioParameterFloat("gain", "Gain", 0.0f, 1.0f, 1.0f));
 }
 
 Tutorial1AudioProcessor::~Tutorial1AudioProcessor()
