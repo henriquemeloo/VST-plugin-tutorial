@@ -25,6 +25,7 @@ Tutorial1AudioProcessor::Tutorial1AudioProcessor()
 #endif
 {
 	addParameter(gain = new AudioParameterFloat("gain", "Gain", 0.0f, 1.0f, 1.0f));
+	addParameter(pan = new AudioParameterFloat("pan", "Pan", 0.0f, 1.0f, 0.5f));
 }
 
 Tutorial1AudioProcessor::~Tutorial1AudioProcessor()
@@ -156,11 +157,12 @@ void Tutorial1AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 	auto* channelDataR = buffer.getWritePointer(1);
 
 	float gSlider = gain->get();
+	float panKnob = pan->get();
 
     // ..do something to the data...
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-		channelDataL[i] *= gSlider;
-		channelDataR[i] *= gSlider;
+		channelDataL[i] *= gSlider * (panKnob - 1);
+		channelDataR[i] *= gSlider * (panKnob);
 	}
 }
 
