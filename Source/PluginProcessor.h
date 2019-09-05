@@ -58,6 +58,10 @@ public:
 private:
 	AudioParameterFloat* gain;
 	AudioParameterFloat* pan;
+	AudioParameterFloat* autoPan;
+	AudioParameterBool* toggleAutoPan;
+
+	int n = 0;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Tutorial1AudioProcessor)
 };

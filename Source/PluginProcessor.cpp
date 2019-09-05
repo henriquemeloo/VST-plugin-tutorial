@@ -26,6 +26,8 @@ Tutorial1AudioProcessor::Tutorial1AudioProcessor()
 {
 	addParameter(gain = new AudioParameterFloat("gain", "Gain", 0.0f, 1.0f, 1.0f));
 	addParameter(pan = new AudioParameterFloat("pan", "Pan", 0.0f, 90.0f, 45.0f));
+	addParameter(toggleAutoPan = new AudioParameterBool("toggleAutoPan", "Toggle Auto Pan", false));
+	addParameter(autoPan = new AudioParameterFloat("autoPan", "Auto Pan Freq (BPM)", 1.0f, 300.0f, 120.0f));
 }
 
 Tutorial1AudioProcessor::~Tutorial1AudioProcessor()
@@ -158,13 +160,40 @@ void Tutorial1AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
 
 	float gSlider = gain->get();
 	float panKnob = pan->get();
-	float leftPanValue = cos(double_Pi * panKnob / 180);
-	float rightPanValue = sin(double_Pi * panKnob / 180);
+	float panLeft = cos(double_Pi * panKnob / 180);
+	float panRight = sin(double_Pi * panKnob / 180);
+
+	float autoPanAngle, autoPanLeft, autoPanRight;
+	float autoPanFreq = autoPan->get() / 60;
+	float samplingPeriod = 1.0 / getSampleRate();
+	int maxN = 1 / (autoPanFreq * samplingPeriod);
 
     // ..do something to the data...
 	for (int i = 0; i < buffer.getNumSamples(); i++) {
-		channelDataL[i] *= gSlider * leftPanValue;
-		channelDataR[i] *= gSlider * rightPanValue;
+		if (toggleAutoPan->get()) {
+			// autopanning
+			/*
+			Calculate constant power panning with the angle of panning
+			varying sinusoidally in given frequency.
+			*/
+			autoPanAngle = (double_Pi / 180) * (
+				sin(2 * double_Pi * autoPanFreq * n * samplingPeriod) + 1
+				) * 45;
+			autoPanLeft = cos(autoPanAngle);
+			autoPanRight = sin(autoPanAngle);
+
+			n++;
+		}
+		else {
+			autoPanLeft = 1;
+			autoPanRight = 1;
+		}
+		channelDataL[i] *= gSlider * panLeft * autoPanLeft;
+		channelDataR[i] *= gSlider * panRight * autoPanRight;
+
+		if (n > maxN) {
+			n = 0;
+		}
 	}
 }
 
