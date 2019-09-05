@@ -24,8 +24,8 @@ Tutorial1AudioProcessor::Tutorial1AudioProcessor()
                        )
 #endif
 {
-	addParameter(gain = new AudioParameterFloat("gain", "Gain", 0.0f, 1.0f, 1.0f));
-	addParameter(pan = new AudioParameterFloat("pan", "Pan", 0.0f, 90.0f, 45.0f));
+	addParameter(gain = new AudioParameterFloat("gain", "Gain (dB)", -100.0f, 12.0f, 0.0f));
+	addParameter(pan = new AudioParameterFloat("pan", "Pan", -1.0f, 1.0f, 0.0f));
 	addParameter(toggleAutoPan = new AudioParameterBool("toggleAutoPan", "Toggle Auto Pan", false));
 	addParameter(autoPan = new AudioParameterFloat("autoPan", "Auto Pan Freq (BPM)", 1.0f, 300.0f, 120.0f));
 }
@@ -158,10 +158,10 @@ void Tutorial1AudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     auto* channelDataL = buffer.getWritePointer(0);
 	auto* channelDataR = buffer.getWritePointer(1);
 
-	float gSlider = gain->get();
-	float panKnob = pan->get();
-	float panLeft = cos(double_Pi * panKnob / 180);
-	float panRight = sin(double_Pi * panKnob / 180);
+	float gSlider = pow(10, (gain->get() / 20));
+	float panAngle = (pan->get() + 1) * 45;
+	float panLeft = cos(double_Pi * panAngle / 180);
+	float panRight = sin(double_Pi * panAngle / 180);
 
 	float autoPanAngle, autoPanLeft, autoPanRight;
 	float autoPanFreq = autoPan->get() / 60;
